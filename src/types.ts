@@ -9,6 +9,9 @@ export interface AdMetrics {
   ctr: string;
   cpc: string;
   cpm: string;
+  ftdCount: number;
+  ftdCost: string;
+  projectKpi: string;
 }
 
 export interface AdNode {

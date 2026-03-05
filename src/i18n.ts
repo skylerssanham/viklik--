@@ -25,6 +25,8 @@ export const translations = {
     ctr: '点击率',
     cpc: '单次点击成本',
     cpm: '千次展示成本',
+    ftdCount: '首充数',
+    ftdCost: '首充成本',
     noData: '暂无数据',
     basicInfo: '基础信息（只读）',
     projectKpi: '项目 KPI',
@@ -32,15 +34,15 @@ export const translations = {
     countryCpcMin: '国家单次点击成本下限',
     strategyConfig: '策略配置（可编辑）',
     campaignStopThreshold: '广告系列关停阈值',
-    campaignStopDesc: '当该系列总花费超过此阈值且未达标时，将自动关停整个系列。',
+    campaignStopDesc: '系列有首充，整个系列花费/首充人数超过此阈值关停，系统默认2倍KPI，本系列KPI为8.5',
     ftdConstant: 'FTD 常数',
-    ftdConstantDesc: '设置该广告系列的首次存款预估常数。',
+    ftdConstantDesc: 'FTD常数=（客户后台注册数-FB面板注册数）/客户后台注册数',
     adGroupStopThreshold: '广告组关停阈值',
     adGroupStopDesc: '当该广告组内总花费超过此阈值且未达标时，将自动关停该组。',
     adStopThreshold: '广告花费关停阈值',
-    adStopDesc: '当单条广告花费超过此阈值且无首充时，将自动关停该广告。',
+    adStopDesc: '当前广告无首充，注册成本小于2/3 项目KPI，总花费 28.0 >广告花费关停阈值，将生成关停工单',
     adCpaThreshold: '注册成本关停阈值',
-    adCpaDesc: '当该广告注册成本超过此阈值且无首充时，将自动关停该广告。',
+    adCpaDesc: '当前广告无首充，注册成本超过注册成本关停阈值，且持续 1h 注册数无新增，仍为 1将生成关停工单',
     execOrder1: '执行顺序：1',
     execOrder2: '执行顺序：2',
     applyToAll: '对该系列下的所有广告生效',
@@ -48,7 +50,16 @@ export const translations = {
     creativeManagement: '素材管理',
     creativeRemark: '素材备注',
     creativeRemarkDesc: '为该广告素材添加备注信息。',
-    creativeRemarkPlaceholder: '请输入素材备注...',
+    creativeRemarkPlaceholder: '请选择素材备注...',
+    remarkOptions: {
+      excellent: '优秀',
+      good: '良好',
+      average: '一般',
+      poor: '较差',
+      replace: '需替换',
+      canRecreate: '可二创',
+      cannotRecreate: '不可二创'
+    },
     creativeImage: '素材预览',
     globalAdRules: '全局广告规则 (应用于所有广告)',
     groupAdRules: '组内广告规则 (应用于组内所有广告)',
@@ -81,6 +92,8 @@ export const translations = {
     ctr: 'CTR',
     cpc: 'CPC',
     cpm: 'CPM',
+    ftdCount: 'FTD Count',
+    ftdCost: 'FTD Cost',
     noData: 'No data available',
     basicInfo: 'Basic Info (Read-only)',
     projectKpi: 'Project KPI',
@@ -88,15 +101,15 @@ export const translations = {
     countryCpcMin: 'Country CPC Min',
     strategyConfig: 'Strategy Config (Editable)',
     campaignStopThreshold: 'Campaign Stop Threshold',
-    campaignStopDesc: 'Automatically stop the entire campaign when total spend exceeds this threshold without meeting targets.',
+    campaignStopDesc: 'Campaign has FTD, stop when entire campaign spend / FTD count exceeds this threshold. Default is 2x KPI, current campaign KPI is 8.5',
     ftdConstant: 'FTD Constant',
-    ftdConstantDesc: 'Set the First Time Deposit (FTD) estimation constant for this campaign.',
+    ftdConstantDesc: 'FTD Constant = (Client Backend Registrations - FB Panel Registrations) / Client Backend Registrations',
     adGroupStopThreshold: 'Ad Group Stop Threshold',
     adGroupStopDesc: 'Automatically stop the ad group when the total spend exceeds this threshold without meeting targets.',
     adStopThreshold: 'Ad Spend Stop Threshold',
-    adStopDesc: 'Automatically stop the ad when its spend exceeds this threshold without FTD.',
+    adStopDesc: 'Current ad has no FTD, CPA is less than 2/3 of Project KPI, and total spend 28.0 > Ad Spend Stop Threshold, a stop ticket will be generated',
     adCpaThreshold: 'CPA Stop Threshold',
-    adCpaDesc: 'Automatically stop the ad when its CPA exceeds this threshold without FTD.',
+    adCpaDesc: 'Current ad has no FTD, CPA exceeds the CPA Stop Threshold, and there are no new registrations for 1h (still 1), a stop ticket will be generated',
     execOrder1: 'Execution Order: 1',
     execOrder2: 'Execution Order: 2',
     applyToAll: 'Apply to all ads in this campaign',
@@ -104,7 +117,16 @@ export const translations = {
     creativeManagement: 'Creative Management',
     creativeRemark: 'Creative Remark',
     creativeRemarkDesc: 'Add remarks for this ad creative.',
-    creativeRemarkPlaceholder: 'Enter creative remark...',
+    creativeRemarkPlaceholder: 'Select creative remark...',
+    remarkOptions: {
+      excellent: 'Excellent',
+      good: 'Good',
+      average: 'Average',
+      poor: 'Poor',
+      replace: 'Needs Replacement',
+      canRecreate: 'Can Recreate',
+      cannotRecreate: 'Cannot Recreate'
+    },
     creativeImage: 'Creative Preview',
     globalAdRules: 'Global Ad Rules (Applies to all ads)',
     groupAdRules: 'Group Ad Rules (Applies to all ads in group)',
@@ -117,10 +139,10 @@ export const translations = {
 
 export const t = (lang: Language, key: keyof typeof translations['zh'], params?: Record<string, string | number>) => {
   let text = translations[lang][key] || translations['zh'][key] || key;
-  if (params) {
+  if (typeof text === 'string' && params) {
     Object.entries(params).forEach(([k, v]) => {
-      text = text.replace(`{${k}}`, String(v));
+      text = (text as string).replace(`{${k}}`, String(v));
     });
   }
-  return text;
+  return text as any;
 };

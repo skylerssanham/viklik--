@@ -22,7 +22,7 @@ const levelMap = {
 const TreeNode = ({ node, selectedNode, onSelect, defaultExpanded, lang }: any) => {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const isSelected = selectedNode.id === node.id;
-  const hasChildren = node.children && node.children.length > 0;
+  const hasChildren = node.children && node.children.length > 0 && node.level !== 'adGroup';
 
   return (
     <div className="select-none">
@@ -46,12 +46,12 @@ const TreeNode = ({ node, selectedNode, onSelect, defaultExpanded, lang }: any) 
           ) : <div className="w-4" />}
         </div>
         <LevelIcon level={node.level} className={`w-3.5 h-3.5 mr-2 flex-shrink-0 ${isSelected ? 'text-[#1890ff]' : 'text-gray-400'}`} />
-        <span className="truncate flex-1" title={node.name}>
+        <span className="truncate flex-1 flex items-center" title={node.name}>
           <span className="text-[#999] mr-1">[{t(lang, levelMap[node.level])}]</span>
-          {node.name}
+          <span className="truncate">{node.name}</span>
         </span>
       </div>
-      {hasChildren && isExpanded && (
+      {hasChildren && isExpanded && node.level !== 'adGroup' && (
         <div>
           {node.children.map((child: AdNode) => (
             <TreeNode
